@@ -6,7 +6,18 @@ class ListAllUsersController {
   constructor(private listAllUsersUseCase: ListAllUsersUseCase) {}
 
   handle(request: Request, response: Response): Response {
-    // Complete aqui
+    // Should not be able to turn a non existing user as admin
+    const { user_id } = request.headers;
+    try {
+      const all = this.listAllUsersUseCase.execute({
+        user_id: String(user_id),
+      });
+      return response.status(200).json(all);
+    } catch (err) {
+      return response.status(400).json({
+        error: err,
+      });
+    }
   }
 }
 
